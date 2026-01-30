@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spaza Point of Sale</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <h1>Spaza Point of Sale</h1>
+        <p>Scan stock in, sell fast, and track every Rand.</p>
+      </div>
+      <div class="store-selector">
+        <label for="store-type">Store type</label>
+        <select id="store-type">
+          <option value="grocery">Grocery / Mini-market</option>
+          <option value="clothing">Clothing / Fashion</option>
+          <option value="pool">Pool table / Entertainment</option>
+          <option value="other">Other / Mixed</option>
+        </select>
+        <button id="reset-data" class="ghost">Reset demo data</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>Quick Scan</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>Stock intake</h3>
+            <p>Scan barcodes to register incoming stock.</p>
+            <form id="intake-form" class="stacked">
+              <label>
+                Barcode
+                <input type="text" id="intake-barcode" placeholder="Scan or type barcode" required />
+              </label>
+              <label>
+                Quantity received
+                <input type="number" id="intake-qty" min="1" value="1" required />
+              </label>
+              <label>
+                Cost price (R)
+                <input type="number" id="intake-cost" min="0" step="0.01" required />
+              </label>
+              <button type="submit">Add to stock</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Sell items</h3>
+            <p>Scan items at the till and record the sale.</p>
+            <form id="sale-form" class="stacked">
+              <label>
+                Barcode
+                <input type="text" id="sale-barcode" placeholder="Scan or type barcode" required />
+              </label>
+              <label>
+                Quantity sold
+                <input type="number" id="sale-qty" min="1" value="1" required />
+              </label>
+              <label>
+                Selling price (R)
+                <input type="number" id="sale-price" min="0" step="0.01" required />
+              </label>
+              <button type="submit">Record sale</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Inventory & catalog</h2>
+          <button id="add-product" class="ghost">Add product manually</button>
+        </div>
+        <div class="grid three">
+          <div class="card">
+            <h3>Product details</h3>
+            <form id="product-form" class="stacked hidden">
+              <label>
+                Product name
+                <input type="text" id="product-name" placeholder="e.g. Albany Bread" required />
+              </label>
+              <label>
+                Barcode
+                <input type="text" id="product-barcode" placeholder="Scan or type barcode" required />
+              </label>
+              <label>
+                Brand
+                <select id="product-brand"></select>
+              </label>
+              <label>
+                Category
+                <input type="text" id="product-category" placeholder="e.g. Bread, T-shirt" required />
+              </label>
+              <label>
+                Reorder level
+                <input type="number" id="product-reorder" min="0" value="5" required />
+              </label>
+              <button type="submit">Save product</button>
+            </form>
+            <div id="brand-hint" class="hint"></div>
+          </div>
+          <div class="card">
+            <h3>Inventory snapshot</h3>
+            <div id="inventory-summary" class="summary"></div>
+          </div>
+          <div class="card">
+            <h3>Low stock alerts</h3>
+            <ul id="low-stock" class="list"></ul>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Barcode</th>
+                <th>On hand</th>
+                <th>Avg cost (R)</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Business accounts</h2>
+        <div class="grid three">
+          <div class="card">
+            <h3>Damages & shrinkage</h3>
+            <form id="damage-form" class="stacked">
+              <label>
+                Description
+                <input type="text" id="damage-desc" placeholder="Broken glass" required />
+              </label>
+              <label>
+                Cost impact (R)
+                <input type="number" id="damage-cost" min="0" step="0.01" required />
+              </label>
+              <button type="submit">Log damage</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Sundry expenses</h3>
+            <form id="sundry-form" class="stacked">
+              <label>
+                Description
+                <input type="text" id="sundry-desc" placeholder="Taxi to wholesaler" required />
+              </label>
+              <label>
+                Amount (R)
+                <input type="number" id="sundry-cost" min="0" step="0.01" required />
+              </label>
+              <button type="submit">Log expense</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Notes & reminders</h3>
+            <textarea id="notes" rows="8" placeholder="Capture supplier contacts, delivery dates, promotions..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Insights</h2>
+        <div class="grid four">
+          <div class="metric">
+            <span>Total sales</span>
+            <strong id="metric-sales">R0.00</strong>
+          </div>
+          <div class="metric">
+            <span>Gross profit</span>
+            <strong id="metric-profit">R0.00</strong>
+          </div>
+          <div class="metric">
+            <span>Costs (damages + sundry)</span>
+            <strong id="metric-costs">R0.00</strong>
+          </div>
+          <div class="metric">
+            <span>Net result</span>
+            <strong id="metric-net">R0.00</strong>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>Top selling items</h3>
+            <ol id="top-items" class="list"></ol>
+          </div>
+          <div class="card">
+            <h3>Recent activity</h3>
+            <ul id="activity-feed" class="list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Designed for spaza shops: low data usage, offline-first storage, and support for South African
+        brands with manual overrides.
+      </p>
+    </footer>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
